@@ -24,11 +24,12 @@ class DatabaseQueries {
     }
   }
 
-  Future<Result> getCategory({required int limit, required int offset}) async {
+  Future<Result> getCategories(
+      {required int limit, required int offset}) async {
     return await connection.execute(
       Sql.named(
         '''
-     SELECT * FROM category ORDER BY id LIMIT @limit OFFSET @offset
+     SELECT * FROM categories ORDER BY id LIMIT @limit OFFSET @offset
      ''',
       ),
       parameters: {
@@ -38,48 +39,72 @@ class DatabaseQueries {
     );
   }
 
-  Future<Result> getProducts({required int type}) async {
+  Future<Result> getProducts(
+      {required int type, required int limit, required int offset}) async {
     return await connection.execute(
       Sql.named(
-        '''
-     SELECT * FROM product WHERE category_id = @type
-     ''',
+        ''' SELECT id, name, photo, price FROM products WHERE category_id = @type LIMIT @limit OFFSET @offset ''',
       ),
       parameters: {
         'type': type,
+        'limit': limit,
+        'offset': offset,
       },
     );
   }
+
+  Future<Result> getProductInfo({required int id}) async {
+    return await connection.execute(
+      Sql.named(
+        '''
+      SELECT 
+        p.user_id, 
+        p.location, 
+        p.delivery, 
+        p.description,
+        u.name,
+        u.number
+      FROM products p
+      JOIN users u ON p.user_id = u.id
+      WHERE p.id = @id
+      ''',
+      ),
+      parameters: {
+        'id': id,
+      },
+    );
+  }
+
+  Future<Result> authUser({required String userId}) async {
+    print('checkUser running... $userId');
+    final result = await connection.execute(
+      Sql.named('''
+        SELECT * FROM users WHERE id = @id
+        '''),
+      parameters: {
+        'id': userId,
+      },
+    );
+    return result;
+  }
+
+  Future<int> registerUser(
+      {userId, userName, userEmail, userPhoto, accessToken}) async {
+    final result = await connection.execute(
+      Sql.named('''
+ INSERT INTO users (id, name, email, photo, access_token, status) VALUES (@id, @name, @email, @photo, @access_token, @status) 
+ '''),
+      parameters: {
+        'id': userId,
+        'name': userName,
+        'email': userEmail,
+        'photo': userPhoto,
+        'access_token': accessToken,
+        'status': 'active',
+      },
+    );
+    return result.affectedRows;
+  }
+
+  Future<void> authWithGoogle({userId, userName, userEmail, userPhoto}) async {}
 }
-
-//   Future<Map<String, dynamic>?> getUserByEmail(String email) async {
-//     print('getUserByEmail: $email');
-//     final result = await connection.execute(
-//       Sql.named('''
-//     SELECT id, email, username, profile_photo
-//      FROM users
-//      WHERE email = @email
-//      '''),
-//       parameters: {'email': email},
-//     );
-//     if (result.isNotEmpty) {
-//       // Отправляем код на почтовый адрес
-//       return result.first.toColumnMap();
-//     } else {
-//       return null;
-//     }
-//   }
-
-//   addUser(String email, String username) async {
-//     print('addUser: $email, $username');
-//     final result = await connection.execute(
-//       Sql.named('''
-//     INSERT INTO users (email, username)
-//     VALUES (@email, @username)
-//     '''),
-//       parameters: {'email': email, 'username': username},
-//     );
-//     print('result: $result');
-//     print('result: ${result.toList()}');
-//   }
-// }

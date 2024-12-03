@@ -1,8 +1,7 @@
 // handlers.dart
 import 'dart:convert';
-
+import 'package:postgres/postgres.dart';
 import 'package:shelf/shelf.dart';
-import 'package:shelf_router/shelf_router.dart';
 import 'queries.dart';
 
 class Handlers {
@@ -21,109 +20,86 @@ class Handlers {
   //   return Response('Hello, World!\n');
   // }
 
-  Future<Response> categoryHandler(Request request) async {
-    // print('ECHO START');
-    // final result = await dbQueries.getAllCategory();
-    // if (result == null) {
-    //   return Response.notFound('No registered');
-    // } else {
-    //   return Response.ok(jsonEncode(result));
-    // }
+  Future<Response> getCategoriesHandler(Request request) async {
     final int offset = int.parse(request.url.queryParameters['offset'] ?? '0');
     final int limit = int.parse(request.url.queryParameters['limit'] ?? '10');
-    final result = await dbQueries.getCategory(limit: limit, offset: offset);
-    final products = result.map((row) => row.toColumnMap()).toList();
-    return Response.ok(jsonEncode(products),
+    final result = await dbQueries.getCategories(limit: limit, offset: offset);
+    final categories = _resultToList(result);
+    print('RESULT RESPONSE CATEGORY: $categories');
+    return Response.ok(jsonEncode(categories),
         headers: {'Content-Type': 'application/json'});
   }
 
-  Future<Response> productHandler(Request request) async {
+  Future<Response> getProductsHandler(Request request) async {
     final int type = int.parse(request.url.queryParameters['type'] ?? '0');
+    final int offset = int.parse(request.url.queryParameters['offset'] ?? '0');
+    final int limit = int.parse(request.url.queryParameters['limit'] ?? '10');
     print('type: $type');
-    final result = await dbQueries.getProducts(type: type);
-    final products = result.map((row) {
-      final productMap = row.toColumnMap();
-      productMap['date_of_added'] =
-          productMap['date_of_added']?.toIso8601String();
-      return productMap;
-    }).toList(); // Преобразование DateTime в строку return productMap;
+    final result =
+        await dbQueries.getProducts(type: type, limit: limit, offset: offset);
+    final products = _resultToList(result);
+    print('RESULT RESPONSE PRODUCT: $products');
     return Response.ok(jsonEncode(products),
         headers: {'Content-Type': 'application/json'});
   }
-  // Future<Response> sendCodeEmail(Request request) async {
-  //   await Future.delayed(Duration(seconds: 5));
-  //   print('loginUser');
-  //   // return Response.notFound('No registered');
-  //   var email = await jsontransform('email', request);
-  //   if (email != '' && await dbQueries.hasUser(email)) {
-  //     var timeLeft = _codes.canSendCode(email);
-  //     if (timeLeft == null) {
-  //       var codeResult = await _codes.generateCode(email);
-  //       sendAuthorizationCode(email, codeResult);
-  //       print('КОД ПОДТВЕРЖДЕНИЯ: $codeResult');
-  //     } else {
-  //       return Response(422, body: 'Код уже был отправлен на номер: $email');
-  //     }
-  //     //Отправляем код на почту
 
-  //     return Response.ok('Код был отправлен на номер: $email');
-  //   } else {
-  //     logInfo('Аккаунт не зарегистрирован');
-  //     return Response.unauthorized('Аккаунт не зарегистрирован');
-  //   }
-  // }
+  Future<Response> getProductInfoHandler(Request request) async {
+    final int id = int.parse(request.url.queryParameters['id'] ?? '0');
+    print('id: $id');
+    final result = await dbQueries.getProductInfo(id: id);
+    final products = _resultToList(result);
+    for (var item in products) {
+      item.remove('user_id');
+    }
+    print('INFO FULL PRODUCT: $products');
+    return Response.ok(jsonEncode({...products[0]}),
+        headers: {'Content-Type': 'application/json'});
+  }
 
-  // Future<Response> loginWithNumber(Request request) async {
-  //   print('loginUser');
-  //   final number = await jsontransform('number', request);
-  //   print('number: $number');
-  //   if (number.isNotEmpty) {
-  //     if (await dbQueries.hasUser(number)) {
-  //       if (_codes.checkCode(number)) {
-  //         print('КОД ПОДТВЕРЖДЕНИЯ: ${_codes.generateCode(number)}');
-  //         //Отправляем код на почту
-  //         return Response.ok('Код отправлен на почту');
-  //       }
-  //     }
-  //   }
-  //   return Response.badRequest(body: 'Ошибка, пожалуйста, попробуйте снова');
-  // }
+  Future<Response> authWithGoogleHandler(Request request) async {
+    print(' Auth with Google handler');
+    final authData = await request.readAsString();
+    final data = jsonDecode(authData);
 
-  // Future<Response> confirmCode(Request request) async {
-  //   print('verificationCode');
-  //   final params = await request
-  //       .readAsString()
-  //       .then((body) => jsonDecode(body) as Map<String, dynamic>);
-  //   logInfo('PARAMS: $params');
-  //   final verifyCode = params['code'] as String;
-  //   final email = params['email'] as String;
-  //   print('code: $verifyCode');
-  //   print('email: $email');
-  //   if (verifyCode.isNotEmpty) {
-  //     return _codes.checkCode(verifyCode)
-  //         ? Response.notFound('notFound')
-  //         : Response.ok('Код подтвержден!');
-  //   }
-  //   return Response.badRequest(body: 'Ошибка, пожалуйста, попробуйте снова');
-  // }
+    final String userId = data['id'];
+    final String userName = data['name'];
+    final String userEmail = data['email'];
+    final String userPhoto = data['photo'];
+    final String accessToken = data['accessToken'];
 
-//   Future<Response> registerUser(Request request) async {
-//     print('registerUser');
-//     final params = await request
-//         .readAsString()
-//         .then((body) => jsonDecode(body) as Map<String, dynamic>);
-//     final email = params['email'] as String;
-//     final username = params['username'] as String;
-//     print('email: $email');
-//     if (email.isNotEmpty && username.isNotEmpty) {
-//       if (await dbQueries.addUser(email, username) != null) {
-//         codes.checkCode(email);
-//         return Response.ok('Email is registered in Database!');
-//       } else {
-//         return Response.notFound('Email is not registered in Database!');
-//       }
-//     } else {
-//       return Response.badRequest(body: 'Email empty');
-//     }
-//   }
+    // Проверка, существует ли пользователь
+    final getUserData = await dbQueries.authUser(userId: userId);
+    if (getUserData.isNotEmpty) {
+      print(' User already exists');
+      final result = _resultToListWithDateTime(getUserData);
+      return Response.ok(jsonEncode({...result[0]}));
+    } else {
+      print('User does not exist, registering...');
+      await dbQueries.registerUser(
+          userId: userId,
+          userName: userName,
+          userEmail: userEmail,
+          userPhoto: userPhoto,
+          accessToken: accessToken);
+      final getUserData = await dbQueries.authUser(userId: userId);
+      if (getUserData.isNotEmpty) {
+        print('REGISTERED');
+        final result = _resultToListWithDateTime(getUserData);
+        return Response.ok(jsonEncode({...result[0]}));
+      } else {
+        return Response.notFound('Ошибка регистрации. Что-то пошло не так');
+      }
+    }
+  }
+
+  List<Map<String, dynamic>> _resultToListWithDateTime(Result resultData) =>
+      resultData.map((row) {
+        final resultDataMap = row.toColumnMap();
+        resultDataMap['created_at'] =
+            resultDataMap['created_at']?.toIso8601String();
+        return resultDataMap;
+      }).toList();
+
+  List<Map<String, dynamic>> _resultToList(Result resultData) =>
+      resultData.map((row) => row.toColumnMap()).toList();
 }

@@ -15,10 +15,13 @@ void main(List<String> args) async {
     Endpoint(
         host: '127.0.0.1',
         port: 5432,
-        database: 'seller_product',
+        database: 'tez_bazar_db',
         username: 'postgres',
         password: '9899'),
-    settings: ConnectionSettings(sslMode: SslMode.disable),
+    settings: ConnectionSettings(
+      sslMode: SslMode.disable,
+      timeZone: 'Asia/Bishkek',
+    ),
   );
   print(Directory.current.path);
   // Hive.init('${Directory.current.path}\\hive');
@@ -30,8 +33,10 @@ void main(List<String> args) async {
 
   final router = Router()
     // ..get('/', handlers.rootHandler)
-    ..get('/category', handlers.categoryHandler)
-    ..get('/products', handlers.productHandler);
+    ..get('/categories', handlers.getCategoriesHandler)
+    ..get('/products', handlers.getProductsHandler)
+    ..post('/authWithGoogle', handlers.authWithGoogleHandler)
+    ..get('/getProductInfo', handlers.getProductInfoHandler);
   // ..post('/send-code-email', handlers.sendCodeEmail)
   // ..post('/login-with-number', handlers.loginWithNumber)
   // ..post('/confirm-code', handlers.confirmCode);
