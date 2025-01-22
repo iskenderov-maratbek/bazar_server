@@ -15,8 +15,9 @@ import 'handler_version.dart';
 import 'hive_data.dart';
 
 void main(List<String> args) async {
-  final ip = InternetAddress('192.168.0.100');
-  final port = 3000;
+  // final ip = InternetAddress('13.60.255.190');
+  final ip = InternetAddress.anyIPv4;
+  final port = 80;
   ansiColorDisabled = false;
 
   final conn = await Connection.open(
