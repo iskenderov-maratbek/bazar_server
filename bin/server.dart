@@ -1,15 +1,23 @@
 import 'dart:io';
 // import 'package:hive/hive.dart';
+import 'package:ansicolor/ansicolor.dart';
+import 'package:hive/hive.dart';
 import 'package:postgres/postgres.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
 import 'handlers.dart';
 import 'queries.dart';
+import 'auth/gcs_service.dart';
+import 'common/handler_service.dart';
+import 'text_constants.dart';
+import 'handler_version.dart';
+import 'hive_data.dart';
 
 void main(List<String> args) async {
-  final ip = InternetAddress('192.168.1.103');
+  final ip = InternetAddress('192.168.0.100');
   final port = 3000;
+  ansiColorDisabled = false;
 
   final conn = await Connection.open(
     Endpoint(
@@ -23,27 +31,55 @@ void main(List<String> args) async {
       timeZone: 'Asia/Bishkek',
     ),
   );
-  print(Directory.current.path);
-  // Hive.init('${Directory.current.path}\\hive');
-  // var box = await Hive.openBox('codes_database');
 
-  // ConfirmCodes codes = ConfirmCodes(box);
+  final credentialsJson =
+      await File('bin/auth/tez-bazar-gc-2f2fad85308f.json').readAsString();
+
+  final bucketName = 'products-tez-bazar';
+  final googleCloudService = await GoogleCloudService.init(
+      credentialsJson: credentialsJson, bucketName: bucketName);
+
   DatabaseQueries dbQueries = DatabaseQueries(conn);
-  Handlers handlers = Handlers(dbQueries);
+
+  HandlerService handlerService =
+      HandlerService(db: dbQueries, gcs: googleCloudService);
+  Handlers handlers =
+      Handlers(db: dbQueries, gcs: googleCloudService, hs: handlerService);
+  // Hive
+  final path = Directory.current.path;
+  Hive.init(path);
+  final box = await Hive.openBox('mainbox');
+
+  HiveData hiveData = HiveData(box: box);
+  hiveData.setData(DbFields.homeVersionKey, '0.4.4');
+  HandlerVersion handlerVersion = HandlerVersion(hiveData: hiveData);
 
   final router = Router()
-    // ..get('/', handlers.rootHandler)
-    ..get('/categories', handlers.getCategoriesHandler)
-    ..get('/products', handlers.getProductsHandler)
-    ..post('/authWithGoogle', handlers.authWithGoogleHandler)
-    ..get('/getProductInfo', handlers.getProductInfoHandler);
-  // ..post('/send-code-email', handlers.sendCodeEmail)
-  // ..post('/login-with-number', handlers.loginWithNumber)
-  // ..post('/confirm-code', handlers.confirmCode);
+    ..get(DbFields.getMainData, handlers.getMainDataHandler)
+    ..get(DbFields.getHomeVersion, handlerVersion.gethomeVersionHandler)
+    ..get(DbFields.getCategories, handlers.getCategoriesHandler)
+    ..get(DbFields.getBanners, handlers.getBannersHandler)
+    ..get(DbFields.allCategories, handlers.getListOfCategoriesHandler)
+    ..get(DbFields.getProducts, handlers.getProductsHandler)
+    ..post(DbFields.authWithGoogle, handlers.authWithGoogleHandler)
+    ..get(DbFields.getActiveProducts, handlers.getActiveProductsHandler)
+    ..get(DbFields.getArchiveProducts, handlers.getArchiveProductsHandler)
+    //Post requests
+    ..get(DbFields.search, handlers.getSearchProduct)
+    ..post(DbFields.userProfileUpdate, handlers.userProfileUpdateHandler)
+    ..post(DbFields.userProfileUpdateWithFile,
+        handlers.userProfileUpdateWithFileHandler)
+    ..post(DbFields.addAd, handlers.addProductHandler)
+    ..post(DbFields.bugReport, handlers.bugReportHandler)
+    ..post(DbFields.addAdWithFile, handlers.addProductWithFileHandler)
+    ..post(DbFields.editAd, handlers.editProductHandler)
+    ..post(DbFields.archivedAd, handlers.archivedProductHandler)
+    ..post(DbFields.moderateAd, handlers.moderateProductHandler)
+    ..post(DbFields.removeAd, handlers.removeProductHandler);
 
   final handler =
       Pipeline().addMiddleware(logRequests()).addHandler(router.call);
 
   final server = await serve(handler, ip, port);
-  print('Server listening on port ${server.port}');
+  print('SERVER START ON: ${server.port}');
 }

@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "tez-bazar-gc",
+  "private_key_id": "2f2fad85308fe20957540dfafba7d874cea2e921",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDEv6NQBv6lslYW\ndzgpwul9MhoT65lv4v1APIgris57BBwIyyPfPVFgEmQqRTVsnWMt7L/cmQ8Uwb1O\naAGEanvEu/fMxq/MxICbLXXTHOnzy1xrthwBtIr3jKbHWYujQuIeSOJD+8pYxhmP\noB+J7e4TAeHzdHogk4Ed54kDIgwEWVJZsUYEr7x/Zuea++/AirC9AcdGbel/vBcC\n+FJVTtmZeoK9luepB6vSE+6BLr308CuQqmrz7gYoVUJwTS84QLVY1ER8eZLzA5BB\n+pL1CXOL3Snj7nTVcK8CiplRlpi9FUcT40HbkaHTCVnw0KkD43uSf+cc7maXSJMB\nKyNEWTY7AgMBAAECggEAMj8C1TBEHkryI2ClDj1B5gBCmq3DjMh6hsouuHgFjXMa\nOcCvU5bUTmXEAOuV3jw/lP3ubccFC/cCgqCbKpcLLs4WVcy0HuZcNcUhXx32PZXE\n75kdg+34w4m/GhArUjGFj9hrOJN4NL26z2xEQbRq5Z3Id6VafzFMezejTRKH4R//\n7JCOYuqyIvuMfQ4/gC9btzXBaobRjSJAaVJrGU4axNYl3HmDd53Jr3PvblCkXmnX\n5JSv+4nHfACT8FsjT3UOp7MbjvWDWFbNwOR5cadCavxxS7ui6FVLQzB7F2yxB6y9\nN/aXNgorj1R61sMEBADpeRlWNeDtpYj/+wlEEPLeqQKBgQDomhFQ+59+h66aCg8Q\nLEymWAoX1gApwZUH+84snbHvLPvWUsLJRIIyuHSm7KSytNEXL3g/UNU2ETkwaRJ0\nugg7h7TlWJbKw2EX8hP7bbZkKtsWqWDwLDhcYTDsbwxmnPnVaGeXXyGVttZvX0yF\nJDDhLh4YbwAXyV5Oc6GJOwIM/QKBgQDYikhA+FghP2oe595hSw5GQIq1/yG2z5uS\nNVQ0EY/5gYrqHBEKmS4CT9mx2WXzlmpEcmESr8+jmWFMbWL17A039ViG3IgPW6sA\n3+N/QLW63iha9jLObnOo9zkPpiwHsLLa9+MDwYll4wYdAlZw0y/laoijRIMzdtva\nARNZ2n3RlwKBgAwU1IlsSGB+E6eUliu04VZShFOwndmNYHxFq/PNTQyrPXloWw2x\nLUINKqHw8K0Hj0SxBoHjZO+l/V5yVq8RapQM/GxdKZfmhgiEXl1U2YBiaXbH3W0c\nHuFNewkMy4wY4zEedyL5ofjwwjqOrJ7NvmwzxQRn341cvDU+9Ej4c6bRAoGAerGv\nyxBsbzpNWQGsoZgzmF7Nud28Lqdn0OpisbYZzBg4q/oHNeghh7HS+dDi0aiyweHF\nWx8/GcW4ueNpJUsBGmnsJU4j0f/w3uf9MYdq8V0bpJ7Hnuw6oMykClfvrtPSI/w9\nJ02sGo0OU7WVYQxooSdCELCrXqfEXrwpSMpibDUCgYAsuczpOm2oHxwWfRx66qYJ\nzZjUBQ8Rr2pUMGDLZ8rzISbRvZtzkvB4OZBTzvhw1i91xsLGSiJyjJK6ISp0I68f\nOK2XY76K5rgIjAfS+VXGAq0auSKxjQg+ekZ5g9XHm21shush19rBM5TB0gEuDbkM\nyj6E0edBqGC8XC7fMventg==\n-----END PRIVATE KEY-----\n",
+  "client_email": "tez-bazar-photo-base@tez-bazar-gc.iam.gserviceaccount.com",
+  "client_id": "111898968849204400588",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/tez-bazar-photo-base%40tez-bazar-gc.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
