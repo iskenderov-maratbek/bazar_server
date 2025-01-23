@@ -62,7 +62,7 @@ class HandlerService {
     if (request.multipart() case var multipart?) {
       await for (final part in multipart.parts) {
         final contentDisposition = part.headers['content-disposition'];
-        print(contentDisposition);
+        print('files $contentDisposition');
         if (contentDisposition != null &&
             !contentDisposition.contains('filename=')) {
           if (contentDisposition.contains('json_data')) {

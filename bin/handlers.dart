@@ -186,7 +186,6 @@ class Handlers {
     try {
       Map<String, dynamic> data;
       List<String>? photos;
-      logError(request.headers);
       final contentType = request.headers[DbFields.contentTypeKey];
       final token = request.headers[DbFields.authKey];
       final id = request.headers['userid'];
