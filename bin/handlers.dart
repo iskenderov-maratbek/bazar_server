@@ -309,6 +309,7 @@ class Handlers {
         );
       }
       if (!await hs.tokenCheck(token, userId, productId: productId)) {
+        logError('token $token ; userId $userId ; productId $productId');
         return Response(
           411,
           body: 'Token is invalid',
@@ -483,6 +484,7 @@ class Handlers {
         );
       }
       if (!await hs.tokenCheck(token, userId, productId: productId)) {
+        logError('token $token ; userId $userId ; productId $productId');
         return Response(
           411,
           body: 'Token is invalid',
@@ -526,6 +528,7 @@ class Handlers {
         );
       }
       if (!await hs.tokenCheck(token, userId, productId: productId)) {
+        logError('token $token ; userId $userId ; productId $productId');
         return Response(
           411,
           body: 'Token is invalid',
