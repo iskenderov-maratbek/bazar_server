@@ -18,7 +18,7 @@ class Handlers {
       Map<String, dynamic> data;
       final contentType = request.headers[DbFields.contentTypeKey];
       final token = request.headers[DbFields.authKey];
-      final id = request.headers[DbFields.userID];
+      final id = request.headers['userid'];
       if (!contentType!.contains(DbFields.applicationJson)) {
         return Response(
           413,
@@ -66,7 +66,7 @@ class Handlers {
       String? profilePhoto;
       Map<String, dynamic> data;
       final token = request.headers[DbFields.authKey];
-      final id = request.headers[DbFields.userID];
+      final id = request.headers['userid'];
       if (!contentType!.contains(DbFields.multipartFormData)) {
         return Response(
           413,
@@ -137,7 +137,7 @@ class Handlers {
       Map<String, dynamic> data;
       final contentType = request.headers[DbFields.contentTypeKey];
       final token = request.headers[DbFields.authKey];
-      final id = request.headers[DbFields.userID];
+      final id = request.headers['userid'];
       if (!contentType!.contains(DbFields.applicationJson)) {
         return Response(
           413,
@@ -163,7 +163,7 @@ class Handlers {
         location: data[DbFields.productLOCATION],
         delivery: data[DbFields.productDELIVERY],
         categoryId: data[DbFields.productCATEGORYID],
-        userId: data[DbFields.productUSERID],
+        userId: id!,
       );
       return result.isNotEmpty
           ? Response.ok(jsonEncode({'id': result[0]}))
@@ -186,9 +186,10 @@ class Handlers {
     try {
       Map<String, dynamic> data;
       List<String>? photos;
+      logError(request.headers);
       final contentType = request.headers[DbFields.contentTypeKey];
       final token = request.headers[DbFields.authKey];
-      final id = request.headers[DbFields.userID];
+      final id = request.headers['userid'];
       if (!contentType!.contains(DbFields.multipartFormData)) {
         return Response(
           413,
@@ -223,7 +224,7 @@ class Handlers {
         location: data[DbFields.productLOCATION],
         delivery: data[DbFields.productDELIVERY],
         categoryId: data[DbFields.productCATEGORYID],
-        userId: data[DbFields.productUSERID],
+        userId: id!,
         photos: photos,
       );
       return result.isNotEmpty
@@ -248,8 +249,8 @@ class Handlers {
       Map<String, dynamic> data;
       final contentType = request.headers[DbFields.contentTypeKey];
       final token = request.headers[DbFields.authKey];
-      final id = request.headers[DbFields.userID];
-      final productId = request.headers[DbFields.productIDAUTH];
+      final id = request.headers['userid'];
+      final productId = request.headers['productid'];
       if (!contentType!.contains(DbFields.applicationJson)) {
         return Response(
           413,
@@ -298,8 +299,8 @@ class Handlers {
     try {
       final contentType = request.headers[DbFields.contentTypeKey];
       final token = request.headers[DbFields.authKey];
-      final userId = request.headers[DbFields.productUSERID];
-      final productId = int.parse(request.headers[DbFields.productID]!);
+      final userId = request.headers['userid'];
+      final productId = int.parse(request.headers['productid']!);
 
       if (!contentType!.contains(DbFields.applicationJson)) {
         return Response(
@@ -475,8 +476,8 @@ class Handlers {
       print(request.headers);
       final contentType = request.headers[DbFields.contentTypeKey];
       final token = request.headers[DbFields.authKey];
-      final userId = request.headers[DbFields.productUSERID];
-      final productId = int.parse(request.headers[DbFields.productID]!);
+      final userId = request.headers['userid'];
+      final productId = int.parse(request.headers['productid']!);
       if (!contentType!.contains(DbFields.applicationJson)) {
         return Response(
           413,
@@ -518,8 +519,8 @@ class Handlers {
     try {
       final contentType = request.headers[DbFields.contentTypeKey];
       final token = request.headers[DbFields.authKey];
-      final userId = request.headers[DbFields.productUSERID];
-      final productId = int.parse(request.headers[DbFields.productID]!);
+      final userId = request.headers['userid'];
+      final productId = int.parse(request.headers['productid']!);
 
       if (!contentType!.contains(DbFields.applicationJson)) {
         return Response(
