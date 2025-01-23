@@ -191,6 +191,7 @@ class Handlers {
       final token = request.headers[DbFields.authKey];
       final id = request.headers['userid'];
       if (!contentType!.contains(DbFields.multipartFormData)) {
+        logError(request.headers);
         return Response(
           413,
           body: 'Content-Type is invalid',
