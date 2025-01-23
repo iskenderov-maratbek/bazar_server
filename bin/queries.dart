@@ -351,6 +351,17 @@ WHERE
     return result.affectedRows > 0;
   }
 
+  Future<int> getLimit({
+    required String id,
+  }) async {
+    final result = await connection.execute(Sql.named('''
+         SELECT COUNT(*) AS product_count FROM products WHERE user_id = @userid;
+          '''), parameters: {
+      'userid': id,
+    });
+    return result.first[0] as int;
+  }
+
   Future<bool> moderateUserProduct({
     required int productId,
   }) async {

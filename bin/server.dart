@@ -13,9 +13,10 @@ import 'common/handler_service.dart';
 import 'text_constants.dart';
 
 void main(List<String> args) async {
-  // final ip = InternetAddress('192.168.0.100');
-  final ip = InternetAddress.anyIPv4;
-  final port = 8080;
+  final ip = InternetAddress('192.168.0.120');
+  // final ip = InternetAddress.anyIPv4;
+  final port = 3000;
+  // final port = 8080;
   ansiColorDisabled = false;
 
   final conn = await Connection.open(
@@ -59,6 +60,7 @@ void main(List<String> args) async {
     ..get(DbFields.getArchiveProducts, handlers.getArchiveProductsHandler)
     //Post requests
     ..get(DbFields.search, handlers.getSearchProduct)
+    ..get('/get_limit', handlers.getLimitHandler)
     ..post(DbFields.userProfileUpdate, handlers.userProfileUpdateHandler)
     ..post(DbFields.userProfileUpdateWithFile,
         handlers.userProfileUpdateWithFileHandler)

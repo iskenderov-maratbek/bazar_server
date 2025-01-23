@@ -471,6 +471,21 @@ class Handlers {
     }
   }
 
+  Future<Response> getLimitHandler(Request request) async {
+    try {
+      final userId = request.headers['userid'];
+      final result = await db.getLimit(id: userId!);
+      return Response.ok(jsonEncode({'limit': result}));
+    } catch (e) {
+      logError(e);
+      return Response(
+        404,
+        body: 'Unknown error',
+        headers: {DbFields.contentTypeKey: DbFields.applicationJson},
+      );
+    }
+  }
+
   Future<Response> archivedProductHandler(Request request) async {
     try {
       print(request.headers);
