@@ -11,8 +11,6 @@ import 'queries.dart';
 import 'auth/gcs_service.dart';
 import 'common/handler_service.dart';
 import 'text_constants.dart';
-import 'handler_version.dart';
-import 'hive_data.dart';
 
 void main(List<String> args) async {
   // final ip = InternetAddress('192.168.0.100');
@@ -49,15 +47,9 @@ void main(List<String> args) async {
   // Hive
   final path = Directory.current.path;
   Hive.init(path);
-  final box = await Hive.openBox('mainbox');
-
-  HiveData hiveData = HiveData(box: box);
-  hiveData.setData(DbFields.homeVersionKey, '0.4.4');
-  HandlerVersion handlerVersion = HandlerVersion(hiveData: hiveData);
 
   final router = Router()
     ..get(DbFields.getMainData, handlers.getMainDataHandler)
-    ..get(DbFields.getHomeVersion, handlerVersion.gethomeVersionHandler)
     ..get(DbFields.getCategories, handlers.getCategoriesHandler)
     ..get(DbFields.getBanners, handlers.getBannersHandler)
     ..get(DbFields.allCategories, handlers.getListOfCategoriesHandler)
