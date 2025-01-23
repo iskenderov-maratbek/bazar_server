@@ -13,10 +13,10 @@ import 'common/handler_service.dart';
 import 'text_constants.dart';
 
 void main(List<String> args) async {
-  final ip = InternetAddress('192.168.0.120');
-  // final ip = InternetAddress.anyIPv4;
-  final port = 3000;
-  // final port = 8080;
+  // final ip = InternetAddress('192.168.0.120');
+  final ip = InternetAddress.anyIPv4;
+  // final port = 3000;
+  final port = 8080;
   ansiColorDisabled = false;
 
   final conn = await Connection.open(
