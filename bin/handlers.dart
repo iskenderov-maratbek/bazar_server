@@ -472,6 +472,7 @@ class Handlers {
 
   Future<Response> archivedProductHandler(Request request) async {
     try {
+      print(request.headers);
       final contentType = request.headers[DbFields.contentTypeKey];
       final token = request.headers[DbFields.authKey];
       final userId = request.headers[DbFields.productUSERID];
