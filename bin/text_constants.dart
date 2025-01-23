@@ -2,18 +2,18 @@
 class DbFields {
   static String productID = 'id';
   static String productNAME = 'name';
-  static String productCATEGORYID = 'category_id';
-  static String productUSERID = 'user_id';
+  static String productCATEGORYID = 'categoryid';
+  static String productUSERID = 'userid';
   static String productDESCRIPTION = 'description';
   static String productPRICE = 'price';
-  static String productPRICETYPE = 'price_type';
+  static String productPRICETYPE = 'pricetype';
   static String productLOCATION = 'location';
   static String productDELIVERY = 'delivery';
   static String productPHOTO = 'photo';
   static String productSTATUS = 'status';
-  static String productIDAUTH = 'product_id';
+  static String productIDAUTH = 'productid';
 //Categories Fields
-  static String categoryID = 'category_id';
+  static String categoryID = 'categoryid';
   static String categoryNAME = 'name';
   static String categoryPHOTO = 'photo';
 
@@ -21,10 +21,10 @@ class DbFields {
   static String userID = 'id';
   static String userNAME = 'name';
   static String userEMAIL = 'email';
-  static String userPROFILEPHOTO = 'profile_photo';
+  static String userPROFILEPHOTO = 'profilephoto';
   static String userPHONE = 'phone';
   static String userWHATSAPP = 'whatsapp';
-  static String userTOKEN = 'access_token';
+  static String userTOKEN = 'accesstoken';
   static String userLOCATION = 'location';
   static String userSTATUS = 'status';
 
@@ -34,8 +34,8 @@ class DbFields {
   static String contentTypeKey = 'Content-Type';
   static String applicationJson = 'application/json';
   static String multipartFormData = 'multipart/form-data';
-  static String homeVersionKey = 'home_version';
-  static String userProductVersionKey = 'user_product_version';
+  static String homeVersionKey = 'homeversion';
+  static String userProductVersionKey = 'userproductversion';
 
 //Path of the images
   static String userPROFILEPHOTOPATH = 'users/profile_photo';
