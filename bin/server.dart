@@ -16,8 +16,8 @@ import 'package:googleapis/logging/v2.dart' as logging;
 
 void main(List<String> args) async {
   // final ip = InternetAddress('192.168.0.120');
-  final ip = InternetAddress.anyIPv4;
   // final port = 3000;
+  final ip = InternetAddress.anyIPv4;
   final port = 8080;
   ansiColorDisabled = false;
   Connection conn;
@@ -100,5 +100,5 @@ void main(List<String> args) async {
       .addHandler(router.call);
 
   final server = await serve(handler, ip, port);
-  loggingService.logSys('${server.port}');
+  loggingService.logSys('Сервер запущен: ${server.address}:${server.port}');
 }

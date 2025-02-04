@@ -1,4 +1,4 @@
-import 'package:ansicolor/ansicolor.dart';
+// import 'package:ansicolor/ansicolor.dart';
 import 'package:googleapis/logging/v2.dart';
 import 'telegram_service.dart';
 import 'package:googleapis/logging/v2.dart' as logging;
@@ -41,21 +41,21 @@ class LoggingService {
 
   logHandler(message) {
     sendLogToGoogleCloud(message, 'INFO');
-    final severePen = AnsiPen()..xterm(227);
-    print(severePen('[--HANDLER] $message'));
+    // final severePen = AnsiPen()..xterm(227);
+    // print(severePen('[--HANDLER] $message'));
   }
 
   logSys(String message) {
     sendLogToGoogleCloud(message, 'INFO');
-    final infoPen = AnsiPen()..xterm(246);
-    print(infoPen('[---SYSTEM] $message'));
+    // final infoPen = AnsiPen()..xterm(246);
+    // print(infoPen('[---SYSTEM] $message'));
   }
 
   logError(message) {
     sendLogToGoogleCloud(message, 'ERROR');
     sendMessageToTelegram('ERROR: $message');
-    final errorPen = AnsiPen()..xterm(197);
-    print(errorPen('[----ERROR] $message'));
+    // final errorPen = AnsiPen()..xterm(197);
+    // print(errorPen('[----ERROR] $message'));
   }
 
 // В конце работы приложения

@@ -181,7 +181,7 @@ class Handlers {
         location: data[DbFields.productLOCATION],
         delivery: data[DbFields.productDELIVERY],
         categoryId: data[DbFields.productCATEGORYID],
-        userId: id!,
+        userId: id,
       );
       return result.isNotEmpty
           ? Response.ok(jsonEncode({'id': result[0]}))
