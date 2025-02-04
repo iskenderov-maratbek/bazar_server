@@ -55,7 +55,7 @@ class DbFields {
   static String search = '/search';
   static String userProfileUpdate = '/user_profile_update';
   static String userProfileUpdateWithFile = '/user_profile_update_with_file';
-  static String addAd = '/add_ad';
+  static String addProduct = '/add_ad';
   static String bugReport = '/bug_report';
   static String addAdWithFile = '/add_ad_with_file';
   static String editAd = '/edit_ad';

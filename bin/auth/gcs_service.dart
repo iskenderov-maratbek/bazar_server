@@ -9,8 +9,7 @@ class GoogleCloudService {
   GoogleCloudService._({required this.storageApi, required this.bucketName});
 
   static Future<GoogleCloudService> init(
-      {required String credentialsJson, required String bucketName}) async {
-    final credentials = ServiceAccountCredentials.fromJson(credentialsJson);
+      {required ServiceAccountCredentials credentials, required String bucketName}) async {
     final scopes = [storage.StorageApi.devstorageFullControlScope];
     final httpClient = await clientViaServiceAccount(credentials, scopes);
     final storageApi = storage.StorageApi(httpClient);

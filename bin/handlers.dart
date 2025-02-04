@@ -4,14 +4,20 @@ import 'package:shelf/shelf.dart';
 import 'queries.dart';
 import 'auth/gcs_service.dart';
 import 'text_constants.dart';
+import 'logging_service.dart';
 import 'common/handler_service.dart';
-import 'logging.dart';
 
 class Handlers {
   final DatabaseQueries db;
   final GoogleCloudService gcs;
   final HandlerService hs;
-  Handlers({required this.db, required this.gcs, required this.hs});
+  final LoggingService ls;
+  Handlers({
+    required this.db,
+    required this.gcs,
+    required this.hs,
+    required this.ls,
+  });
 
   Future<Response> userProfileUpdateHandler(Request request) async {
     try {
@@ -51,7 +57,7 @@ class Handlers {
               headers: {DbFields.contentTypeKey: DbFields.applicationJson},
             );
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(
         410,
         body: 'Error updating data',
@@ -123,7 +129,7 @@ class Handlers {
               headers: {DbFields.contentTypeKey: DbFields.applicationJson},
             );
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(
         412,
         body: 'Error uploading image',
@@ -152,6 +158,18 @@ class Handlers {
           headers: {DbFields.contentTypeKey: DbFields.applicationJson},
         );
       }
+      final limitProduct = await db.getLimit(id: id!);
+      if (limitProduct >= 4) {
+        return Response(
+          244,
+          body: 'You have reached the limit of adding products',
+          headers: {
+            DbFields.contentTypeKey: DbFields.applicationJson,
+            'limit': limitProduct
+          },
+        );
+      }
+
       final requestBody = await request.readAsString();
       data = jsonDecode(requestBody);
 
@@ -173,7 +191,7 @@ class Handlers {
               headers: {DbFields.contentTypeKey: DbFields.applicationJson},
             );
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(
         410,
         body: 'Error updating data',
@@ -190,7 +208,7 @@ class Handlers {
       final token = request.headers[DbFields.authKey];
       final id = request.headers['userid'];
       if (!contentType!.contains(DbFields.multipartFormData)) {
-        logError(request.headers);
+        ls.logError(request.headers);
         return Response(
           413,
           body: 'Content-Type is invalid',
@@ -235,7 +253,7 @@ class Handlers {
               headers: {DbFields.contentTypeKey: DbFields.applicationJson},
             );
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(
         412,
         body: 'Error uploading image',
@@ -286,7 +304,7 @@ class Handlers {
               headers: {DbFields.contentTypeKey: DbFields.applicationJson},
             );
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(
         410,
         body: 'Error updating data',
@@ -310,7 +328,7 @@ class Handlers {
         );
       }
       if (!await hs.tokenCheck(token, userId, productId: productId)) {
-        logError('token $token ; userId $userId ; productId $productId');
+        ls.logError('token $token ; userId $userId ; productId $productId');
         return Response(
           411,
           body: 'Token is invalid',
@@ -339,7 +357,7 @@ class Handlers {
               headers: {DbFields.contentTypeKey: DbFields.applicationJson},
             );
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(
         410,
         body: 'Error updating data $e',
@@ -354,7 +372,7 @@ class Handlers {
       return Response.ok(jsonEncode(categories),
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(500, body: 'Error getting data $e ');
     }
   }
@@ -365,7 +383,7 @@ class Handlers {
       return Response.ok(jsonEncode(banners),
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(500, body: 'Error getting data $e ');
     }
   }
@@ -381,7 +399,7 @@ class Handlers {
       return Response.ok(jsonEncode(result),
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(500, body: 'Error getting data $e ');
     }
   }
@@ -399,7 +417,7 @@ class Handlers {
       return Response.ok(jsonEncode(products),
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(500, body: 'Error getting data $e ');
     }
   }
@@ -423,7 +441,7 @@ class Handlers {
       return Response.ok(jsonEncode(products),
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(500, body: 'Error getting data $e ');
     }
   }
@@ -439,7 +457,7 @@ class Handlers {
       return Response.ok(jsonEncode(result),
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(500, body: 'Error getting data $e ');
     }
   }
@@ -455,7 +473,7 @@ class Handlers {
       return Response.ok(jsonEncode(result),
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(500, body: 'Error getting data $e ');
     }
   }
@@ -466,7 +484,7 @@ class Handlers {
       final categories = _resultToEnd(result);
       return Response.ok(jsonEncode(categories));
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(500, body: 'Error getting data $e ');
     }
   }
@@ -477,7 +495,7 @@ class Handlers {
       final result = await db.getLimit(id: userId!);
       return Response.ok(jsonEncode({'limit': result}));
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(
         404,
         body: 'Unknown error',
@@ -501,7 +519,7 @@ class Handlers {
         );
       }
       if (!await hs.tokenCheck(token, userId, productId: productId)) {
-        logError('token $token ; userId $userId ; productId $productId');
+        ls.logError('token $token ; userId $userId ; productId $productId');
         return Response(
           411,
           body: 'Token is invalid',
@@ -513,7 +531,7 @@ class Handlers {
       if (result) {
         return Response.ok(jsonEncode({'status': 'success'}));
       } else {
-        logError(result);
+        ls.logError(result);
         return Response(
           404,
           body: 'Unknown error',
@@ -521,7 +539,7 @@ class Handlers {
         );
       }
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(
         410,
         body: 'Error updating data',
@@ -545,7 +563,7 @@ class Handlers {
         );
       }
       if (!await hs.tokenCheck(token, userId, productId: productId)) {
-        logError('token $token ; userId $userId ; productId $productId');
+        ls.logError('token $token ; userId $userId ; productId $productId');
         return Response(
           411,
           body: 'Token is invalid',
@@ -558,7 +576,7 @@ class Handlers {
       if (result) {
         return Response.ok(jsonEncode({'status': 'success'}));
       } else {
-        logError(result);
+        ls.logError(result);
         return Response(
           404,
           body: 'Unknown error',
@@ -566,7 +584,7 @@ class Handlers {
         );
       }
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(
         410,
         body: 'Error updating data',
@@ -603,7 +621,7 @@ class Handlers {
         }
       }
     } catch (e) {
-      logError(e);
+      ls.logError(e);
       return Response(500, body: 'Error during authentication');
     }
   }
