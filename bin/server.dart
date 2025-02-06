@@ -15,10 +15,10 @@ import 'middleware.dart';
 import 'package:googleapis/logging/v2.dart' as logging;
 
 void main(List<String> args) async {
-  final ip = InternetAddress('192.168.0.120');
-  final port = 3000;
-  // final ip = InternetAddress.anyIPv4;
-  // final port = 8080;
+  // final ip = InternetAddress('192.168.0.120');
+  // final port = 3000;
+  final ip = InternetAddress.anyIPv4;
+  final port = 8080;
   ansiColorDisabled = false;
   Connection conn;
   while (true) {
