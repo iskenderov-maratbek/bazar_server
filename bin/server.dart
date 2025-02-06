@@ -95,7 +95,7 @@ void main(List<String> args) async {
         );
         request = request.change(context: {'logged': true});
       }
-      return Response.notFound('/');
+      return Response.ok(null);
     });
 
   final handler = Pipeline()
