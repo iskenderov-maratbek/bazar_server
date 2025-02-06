@@ -15,10 +15,10 @@ import 'middleware.dart';
 import 'package:googleapis/logging/v2.dart' as logging;
 
 void main(List<String> args) async {
-  // final ip = InternetAddress('192.168.0.120');
-  // final port = 3000;
-  final ip = InternetAddress.anyIPv4;
-  final port = 8080;
+  final ip = InternetAddress('192.168.0.120');
+  final port = 3000;
+  // final ip = InternetAddress.anyIPv4;
+  // final port = 8080;
   ansiColorDisabled = false;
   Connection conn;
   while (true) {
@@ -89,9 +89,12 @@ void main(List<String> args) async {
     ..post(DbFields.removeAd, handlers.removeProductHandler)
     // Обработчик для несуществующих маршрутов
     ..all('/<ignored|.*>', (Request request) {
-      loggingService.logError(
-        'Перенаправление с несуществующего маршрута: ${request.method} ${request.requestedUri}',
-      );
+      if (!request.context.containsKey('logged')) {
+        loggingService.logError(
+          'Перенаправление с несуществующего маршрута: ${request.method} ${request.requestedUri}',
+        );
+        request = request.change(context: {'logged': true});
+      }
       return Response.found('/');
     });
 

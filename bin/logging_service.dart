@@ -22,7 +22,7 @@ class LoggingService {
   }
 
   Future<void> sendLogToGoogleCloud(String message, String severity) async {
-    final logName = 'projects/tez-bazar-gc/logs/my_log';
+    final logName = 'projects/tez-bazar-gc/logs/tez_bazar_server';
     final logEntry = logging.LogEntry()
       ..logName = logName
       ..resource = (logging.MonitoredResource()..type = 'global')
