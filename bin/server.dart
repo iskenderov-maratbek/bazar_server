@@ -62,6 +62,7 @@ void main(List<String> args) async {
     db: dbQueries,
     gcs: googleCloudService,
     hs: handlerService,
+    ls: loggingService,
   );
 
   final router = Router()
