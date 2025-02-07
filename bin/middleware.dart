@@ -17,7 +17,7 @@ Middleware customLogRequestsMiddleware(LoggingService loggingService) {
       } catch (error, stackTrace) {
         final duration = DateTime.now().difference(startTime);
         loggingService.logError(
-          'Ошибка при обработке запроса: ${request.method} ${request.requestedUri} (${duration.inMilliseconds} ms) errorInfo: $error stackTrace: $stackTrace',
+          'Ошибка при обработке запроса: ${request.method} ${request.requestedUri} (${duration.inMilliseconds} ms) \n ERROR INFO: $error \n\n STACK TRACE: $stackTrace',
         );
         return Response.internalServerError(body: 'Internal Server Error');
       }
