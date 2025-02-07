@@ -28,8 +28,8 @@ void main(List<String> args) async {
             host: '127.0.0.1',
             port: 5432,
             database: 'tez_bazar_db',
-            username: 'postgres',
-            password: '9899'),
+            username: 'client_user',
+            password: 'King.reload\$0'),
         settings: ConnectionSettings(
           sslMode: SslMode.disable,
           timeZone: 'Asia/Bishkek',
