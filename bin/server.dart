@@ -66,6 +66,7 @@ void main(List<String> args) async {
   );
 
   final router = Router()
+    ..get('/', (_) => Response.ok(null))
     ..get(DbFields.getMainData, handlers.getMainDataHandler)
     ..get(DbFields.getCategories, handlers.getCategoriesHandler)
     ..get(DbFields.getBanners, handlers.getBannersHandler)
