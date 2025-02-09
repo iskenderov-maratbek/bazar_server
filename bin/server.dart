@@ -25,10 +25,10 @@ void main(List<String> args) async {
     try {
       conn = await Connection.open(
         Endpoint(
-            host: '127.0.0.1',
+            host: '104.154.93.254',
             port: 5432,
             database: 'tez_bazar_db',
-            username: 'client_user',
+            username: 'postgres',
             password: 'King.reload\$0'),
         settings: ConnectionSettings(
           sslMode: SslMode.disable,
