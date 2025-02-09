@@ -142,7 +142,6 @@ class DatabaseQueries {
         'name': userName,
         'email': userEmail,
         'access_token': accessToken,
-        'location': '???',
         'status': 'active',
       },
     );
