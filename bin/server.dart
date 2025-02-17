@@ -64,6 +64,7 @@ void main(List<String> args) async {
     hs: handlerService,
     ls: loggingService,
   );
+  final file = File('bin/google0d87f4d5f0d867ac.html');
 
   final router = Router()
     ..get('/', (_) => Response.ok(null))
@@ -77,7 +78,6 @@ void main(List<String> args) async {
     ..get(DbFields.getArchiveProducts, handlers.getArchiveProductsHandler)
     ..get('/google0d87f4d5f0d867ac.html', (Request request) async {
       try {
-        final file = File('bin/google0d87f4d5f0d867ac.html');
         if (await file.exists()) {
           loggingService.logError(' confirmGoogle');
           return Response.ok(await file.readAsString(), headers: {
