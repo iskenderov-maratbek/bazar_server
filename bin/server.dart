@@ -76,13 +76,18 @@ void main(List<String> args) async {
     ..get(DbFields.getActiveProducts, handlers.getActiveProductsHandler)
     ..get(DbFields.getArchiveProducts, handlers.getArchiveProductsHandler)
     ..get('/google0d87f4d5f0d867ac.html', (Request request) async {
-      final file = File('bin/google0d87f4d5f0d867ac.html');
-      if (await file.exists()) {
-        loggingService.logError(' confirmGoogle');
-        return Response.ok(await file.readAsString(), headers: {
-          HttpHeaders.contentTypeHeader: 'text/html',
-        });
-      } else {
+      try {
+        final file = File('bin/google0d87f4d5f0d867ac.html');
+        if (await file.exists()) {
+          loggingService.logError(' confirmGoogle');
+          return Response.ok(await file.readAsString(), headers: {
+            HttpHeaders.contentTypeHeader: 'text/html',
+          });
+        } else {
+          loggingService.logError('File not found: ${request.requestedUri}');
+          return Response.notFound('File not found');
+        }
+      } catch (e) {
         loggingService.logError('File not found: ${request.requestedUri}');
         return Response.notFound('File not found');
       }
