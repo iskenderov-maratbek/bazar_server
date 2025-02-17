@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:postgres/postgres.dart';
 import 'package:shelf/shelf.dart';
 import 'queries.dart';
+import 'privacy_policy.dart';
 import 'auth/gcs_service.dart';
 import 'text_constants.dart';
 import 'logging_service.dart';
@@ -371,6 +372,17 @@ class Handlers {
       final categories = _resultToEnd(await db.getCategories());
       return Response.ok(jsonEncode(categories),
           headers: {'Content-Type': 'application/json'});
+    } catch (e) {
+      ls.logError(e);
+      return Response(500, body: 'Error getting data $e ');
+    }
+  }
+
+  Future<Response> getPrivacy(Request request) async {
+    try {
+      return Response.ok(jsonEncode({privacy()}), headers: {
+        'Content-Type': 'application/json',
+      });
     } catch (e) {
       ls.logError(e);
       return Response(500, body: 'Error getting data $e ');
