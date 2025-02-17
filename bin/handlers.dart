@@ -380,7 +380,7 @@ class Handlers {
 
   Future<Response> getPrivacy(Request request) async {
     try {
-      return Response.ok(jsonEncode({privacy()}), headers: {
+      return Response.ok(jsonEncode({}), headers: {
         'Content-Type': 'application/json',
       });
     } catch (e) {
