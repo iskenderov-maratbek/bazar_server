@@ -656,7 +656,7 @@ class Handlers {
   }
 
   Future<Response> bugReportHandler(Request request) async {
-    final userId = request.headers[DbFields.productUSERID]!;
+    final userId = request.headers['userid']!;
     final data = jsonDecode(await request.readAsString());
     final bugText = data['bugReport'];
     if (bugText.isEmpty) {
