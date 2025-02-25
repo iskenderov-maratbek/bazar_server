@@ -658,10 +658,17 @@ class Handlers {
   Future<Response> bugReportHandler(Request request) async {
     final userId = request.headers[DbFields.productUSERID]!;
     final data = jsonDecode(await request.readAsString());
-    final bugText = data['bug_report'];
+    final bugText = data['bugReport'];
+    if (bugText.isEmpty) {
+      ls.logError('Bug description is empty');
+      return Response(400, body: 'Bug description is required');
+    }
     final result = await db.bugReport(userId: userId, description: bugText);
-    return result
-        ? Response.ok(jsonEncode({'status': 'success'}))
-        : Response(415, body: ' Error reporting bug');
+    if (result) {
+      return Response.ok(jsonEncode({'status': 'success'}));
+    } else {
+      ls.logError('Error reporting bug');
+      return Response(415, body: ' Error reporting bug');
+    }
   }
 }

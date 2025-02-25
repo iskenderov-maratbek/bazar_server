@@ -13,12 +13,11 @@ import 'text_constants.dart';
 import 'logging_service.dart';
 import 'middleware.dart';
 import 'package:googleapis/logging/v2.dart' as logging;
+import 'socket.dart' as socket;
 
 void main(List<String> args) async {
-  // final ip = InternetAddress('192.168.0.120');
-  // final port = 3000;
-  final ip = InternetAddress.anyIPv4;
-  final port = 8080;
+  final ip = socket.ip;
+  final port = socket.port;
   ansiColorDisabled = false;
   Connection conn;
   while (true) {
