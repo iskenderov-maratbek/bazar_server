@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:postgres/postgres.dart';
 import 'package:shelf/shelf.dart';
 import 'queries.dart';
-import 'privacy_policy.dart';
 import 'auth/gcs_service.dart';
 import 'text_constants.dart';
 import 'logging_service.dart';
@@ -605,28 +604,61 @@ class Handlers {
     }
   }
 
-  Future<Response> authWithGoogleHandler(Request request) async {
+  Future<Response> signInSimple(Request request) async {
     try {
       final authData = await request.readAsString();
       final data = jsonDecode(authData);
       final String accessToken = data[DbFields.userTOKEN];
       final String userId = data[DbFields.userID];
-      final String userName = data[DbFields.userNAME];
-      final String userEmail = data[DbFields.userEMAIL];
-      final getUserData = await db.authUser(userId: userId);
+      final user = await db.authUser(userId: userId, accessToken: accessToken);
+      if (user.isEmpty) {
+        return Response.ok(jsonEncode({'id': 'not found'}));
+      } else {
+        final result = _resultToEnd(user);
 
+        return Response.ok(jsonEncode({...result[0]}));
+      }
+    } catch (e) {
+      ls.logError(e);
+      return Response(500, body: 'Error signing in $e');
+    }
+  }
+
+  Future<Response> authWithGoogleHandler(Request request) async {
+    print('started');
+    try {
+      final authData = await request.readAsString();
+      final data = jsonDecode(authData);
+      final String accessToken = data[DbFields.userTOKEN];
+      final String userId = data[DbFields.userID];
+      final String? userName = data[DbFields.userNAME];
+      final String? userEmail = data[DbFields.userEMAIL];
+      print(
+          'token $accessToken  userId $userId userName $userName userEmail $userEmail');
+      final getUserData =
+          await db.authUser(userId: userId, accessToken: accessToken);
+      print('result user id: $getUserData');
       if (getUserData.isNotEmpty) {
         final result = _resultToEnd(getUserData);
+        print('result');
+        print(result);
         return Response.ok(jsonEncode({...result[0]}));
+      } else if (userName == null) {
+        return Response.notFound('Ошибка регистрации. Что-то пошло не так');
       } else {
         await db.registerUser(
             userId: userId,
             userName: userName,
             userEmail: userEmail,
             accessToken: accessToken);
-        final getUserData = await db.authUser(userId: userId);
+        print('result user id');
+        print(userId);
+        final getUserData =
+            await db.authUser(userId: userId, accessToken: accessToken);
         if (getUserData.isNotEmpty) {
           final result = _resultToEnd(getUserData);
+          print('result');
+          print(result);
           return Response.ok(jsonEncode({...result[0]}));
         } else {
           return Response.notFound('Ошибка регистрации. Что-то пошло не так');
@@ -634,6 +666,7 @@ class Handlers {
       }
     } catch (e) {
       ls.logError(e);
+      ls.logError(e.toString());
       return Response(500, body: 'Error during authentication');
     }
   }

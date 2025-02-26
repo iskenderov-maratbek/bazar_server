@@ -120,13 +120,16 @@ class DatabaseQueries {
     );
   }
 
-  Future<Result> authUser({required String userId}) async {
+  Future<Result> authUser({required userId, required accessToken}) async {
     final result = await connection.execute(
       Sql.named('''
-        SELECT id,name, email, profile_photo, phone, whatsapp, access_token, location FROM users WHERE id = @id
+        SELECT id, access_token, name, email, profile_photo, phone, whatsapp, location
+FROM users
+WHERE id = @userId AND access_token = @accessToken::TEXT
         '''),
       parameters: {
-        'id': userId,
+        'userId': userId,
+        'accessToken': accessToken,
       },
     );
     return result;

@@ -73,6 +73,7 @@ void main(List<String> args) async {
     ..get(DbFields.allCategories, handlers.getListOfCategoriesHandler)
     ..get(DbFields.getProducts, handlers.getProductsHandler)
     ..post(DbFields.authWithGoogle, handlers.authWithGoogleHandler)
+    ..post('/sign_in_simple', handlers.signInSimple)
     ..get(DbFields.getActiveProducts, handlers.getActiveProductsHandler)
     ..get(DbFields.getArchiveProducts, handlers.getArchiveProductsHandler)
     ..get('/google0d87f4d5f0d867ac.html', (Request request) async {
