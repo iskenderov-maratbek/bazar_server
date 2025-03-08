@@ -40,28 +40,27 @@ void main(List<String> args) async {
       await Future.delayed(Duration(seconds: 5));
     }
   }
-  final String credentialsJson =
-      await File('bin/auth/tez-bazar-gc-2f2fad85308f.json').readAsString();
-  final credentials = ServiceAccountCredentials.fromJson(credentialsJson);
-  final scopes = [
-    logging.LoggingApi.loggingWriteScope,
-  ];
-  final client = await clientViaServiceAccount(credentials, scopes);
-  final logging.LoggingApi api = logging.LoggingApi(client);
-  final bucketName = 'products-tez-bazar';
-  final googleCloudService = await GoogleCloudService.init(
-      credentials: credentials, bucketName: bucketName);
-  final loggingService =
-      await LoggingService.init(api: api, credentials: credentials);
+  // final String credentialsJson =
+  // await File('bin/auth/tez-bazar-gc-2f2fad85308f.json').readAsString();
+  // final credentials = ServiceAccountCredentials.fromJson(credentialsJson);
+  // final scopes = [
+  // logging.LoggingApi.loggingWriteScope,
+  // ];
+  // final client = await clientViaServiceAccount(credentials, scopes);
+  // final logging.LoggingApi api = logging.LoggingApi(client);
+  // final bucketName = 'products-tez-bazar';
+  // final googleCloudService = await GoogleCloudService.init(
+  // credentials: credentials, bucketName: bucketName);
+  // final loggingService =
+  // await LoggingService.init(api: api, credentials: credentials);
   DatabaseQueries dbQueries = DatabaseQueries(conn);
 
-  HandlerService handlerService =
-      HandlerService(db: dbQueries, gcs: googleCloudService);
+  HandlerService handlerService = HandlerService(db: dbQueries);
   Handlers handlers = Handlers(
     db: dbQueries,
-    gcs: googleCloudService,
+    // gcs: googleCloudService,
     hs: handlerService,
-    ls: loggingService,
+    // ls: loggingService,
   );
   final file = File('bin/google0d87f4d5f0d867ac.html');
 
@@ -79,16 +78,16 @@ void main(List<String> args) async {
     ..get('/google0d87f4d5f0d867ac.html', (Request request) async {
       try {
         if (await file.exists()) {
-          loggingService.logError(' confirmGoogle');
+          print(' confirmGoogle');
           return Response.ok(await file.readAsString(), headers: {
             HttpHeaders.contentTypeHeader: 'text/html',
           });
         } else {
-          loggingService.logError('File not found: ${request.requestedUri}');
+          print('File not found: ${request.requestedUri}');
           return Response.notFound('File not found');
         }
       } catch (e) {
-        loggingService.logError('File not found: ${request.requestedUri}');
+        print('File not found: ${request.requestedUri}');
         return Response.notFound('File not found');
       }
     })
@@ -108,7 +107,7 @@ void main(List<String> args) async {
     // Обработчик для несуществующих маршрутов
     ..all('/<ignored|.*>', (Request request) {
       if (!request.context.containsKey('logged')) {
-        loggingService.logError(
+        print(
           'Перенаправление с несуществующего маршрута: ${request.method} ${request.requestedUri}',
         );
         request = request.change(context: {'logged': true});
@@ -116,10 +115,8 @@ void main(List<String> args) async {
       return Response.ok(null);
     });
 
-  final handler = Pipeline()
-      .addMiddleware(customLogRequestsMiddleware(loggingService))
-      .addHandler(router.call);
+  final handler = Pipeline().addHandler(router.call);
 
   final server = await serve(handler, ip, port);
-  loggingService.logSys('Сервер запущен: ${server.address}:${server.port}');
+  print('Сервер запущен: ${server.address}:${server.port}');
 }

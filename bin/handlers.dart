@@ -9,14 +9,14 @@ import 'common/handler_service.dart';
 
 class Handlers {
   final DatabaseQueries db;
-  final GoogleCloudService gcs;
+  // final GoogleCloudService gcs;
   final HandlerService hs;
-  final LoggingService ls;
+  // final LoggingService ls;
   Handlers({
     required this.db,
-    required this.gcs,
+    // required this.gcs,
     required this.hs,
-    required this.ls,
+    // required this.ls,
   });
 
   Future<Response> userProfileUpdateHandler(Request request) async {
@@ -57,7 +57,7 @@ class Handlers {
               headers: {DbFields.contentTypeKey: DbFields.applicationJson},
             );
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(
         410,
         body: 'Error updating data',
@@ -94,11 +94,11 @@ class Handlers {
           headers: {DbFields.contentTypeKey: DbFields.applicationJson},
         );
       }
-      profilePhoto = await gcs.uploadFile(
-          file: hs.file!,
-          fileName: '${id!}-',
-          folder: DbFields.userPROFILEPHOTOPATH,
-          isUserProfilePhoto: true);
+      // profilePhoto = await gcs.uploadFile(
+      //     file: hs.file!,
+      //     fileName: '${id!}-',
+      //     folder: DbFields.userPROFILEPHOTOPATH,
+      //     isUserProfilePhoto: true);
 
       data = hs.data;
       if (data['old_photo'] != null) {
@@ -108,12 +108,12 @@ class Handlers {
                 'https://storage.googleapis.com/products-tez-bazar/', '')
             .replaceAll('${DbFields.userPROFILEPHOTOPATH}/', '')
             .replaceAll('.jpg', '');
-        await gcs.deleteFile(
-            fileName: delFileName, folder: DbFields.userPROFILEPHOTOPATH);
+        // await gcs.deleteFile(
+        //     fileName: delFileName, folder: DbFields.userPROFILEPHOTOPATH);
       }
 
       final result = await db.updateUserData(
-        id: id,
+        id: id!,
         name: data[DbFields.userNAME],
         phone: data[DbFields.userPHONE],
         whatsapp: data[DbFields.userWHATSAPP],
@@ -129,7 +129,7 @@ class Handlers {
               headers: {DbFields.contentTypeKey: DbFields.applicationJson},
             );
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(
         412,
         body: 'Error uploading image',
@@ -191,7 +191,7 @@ class Handlers {
               headers: {DbFields.contentTypeKey: DbFields.applicationJson},
             );
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(
         410,
         body: 'Error updating data',
@@ -208,7 +208,7 @@ class Handlers {
       final token = request.headers[DbFields.authKey];
       final id = request.headers['userid'];
       if (!contentType!.contains(DbFields.multipartFormData)) {
-        ls.logError(request.headers);
+        print(request.headers);
         return Response(
           413,
           body: 'Content-Type is invalid',
@@ -230,10 +230,10 @@ class Handlers {
         );
       }
       data = hs.data;
-      photos = await gcs.uploadFiles(
-          files: hs.files!,
-          fileNamePrefix: 'product-',
-          folder: DbFields.productPHOTOPATH);
+      // photos = await gcs.uploadFiles(
+      //     files: hs.files!,
+      //     fileNamePrefix: 'product-',
+      //     folder: DbFields.productPHOTOPATH);
       final result = await db.addUserProduct(
         name: data[DbFields.productNAME],
         description: data[DbFields.productDESCRIPTION],
@@ -253,7 +253,7 @@ class Handlers {
               headers: {DbFields.contentTypeKey: DbFields.applicationJson},
             );
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(
         412,
         body: 'Error uploading image',
@@ -304,7 +304,7 @@ class Handlers {
               headers: {DbFields.contentTypeKey: DbFields.applicationJson},
             );
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(
         410,
         body: 'Error updating data',
@@ -328,7 +328,7 @@ class Handlers {
         );
       }
       if (!await hs.tokenCheck(token, userId, productId: productId)) {
-        ls.logError('token $token ; userId $userId ; productId $productId');
+        print('token $token ; userId $userId ; productId $productId');
         return Response(
           411,
           body: 'Token is invalid',
@@ -344,7 +344,7 @@ class Handlers {
               .replaceAll('${DbFields.productPHOTOPATH}/', '');
         }).toList();
         String folder = DbFields.productPHOTOPATH;
-        await gcs.deleteFiles(fileNames: fileNames, folder: folder);
+        // await gcs.deleteFiles(fileNames: fileNames, folder: folder);
       }
       final result = await db.removeUserProduct(
         productId: productId,
@@ -357,7 +357,7 @@ class Handlers {
               headers: {DbFields.contentTypeKey: DbFields.applicationJson},
             );
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(
         410,
         body: 'Error updating data $e',
@@ -372,7 +372,7 @@ class Handlers {
       return Response.ok(jsonEncode(categories),
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(500, body: 'Error getting data $e ');
     }
   }
@@ -383,7 +383,7 @@ class Handlers {
         'Content-Type': 'application/json',
       });
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(500, body: 'Error getting data $e ');
     }
   }
@@ -394,7 +394,7 @@ class Handlers {
       return Response.ok(jsonEncode(banners),
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(500, body: 'Error getting data $e ');
     }
   }
@@ -410,7 +410,7 @@ class Handlers {
       return Response.ok(jsonEncode(result),
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(500, body: 'Error getting data $e ');
     }
   }
@@ -428,7 +428,7 @@ class Handlers {
       return Response.ok(jsonEncode(products),
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(500, body: 'Error getting data $e ');
     }
   }
@@ -452,7 +452,7 @@ class Handlers {
       return Response.ok(jsonEncode(products),
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(500, body: 'Error getting data $e ');
     }
   }
@@ -468,7 +468,7 @@ class Handlers {
       return Response.ok(jsonEncode(result),
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(500, body: 'Error getting data $e ');
     }
   }
@@ -484,7 +484,7 @@ class Handlers {
       return Response.ok(jsonEncode(result),
           headers: {'Content-Type': 'application/json'});
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(500, body: 'Error getting data $e ');
     }
   }
@@ -495,7 +495,7 @@ class Handlers {
       final categories = _resultToEnd(result);
       return Response.ok(jsonEncode(categories));
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(500, body: 'Error getting data $e ');
     }
   }
@@ -506,7 +506,7 @@ class Handlers {
       final result = await db.getLimit(id: userId!);
       return Response.ok(jsonEncode({'limit': result}));
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(
         404,
         body: 'Unknown error',
@@ -530,7 +530,7 @@ class Handlers {
         );
       }
       if (!await hs.tokenCheck(token, userId, productId: productId)) {
-        ls.logError('token $token ; userId $userId ; productId $productId');
+        print('token $token ; userId $userId ; productId $productId');
         return Response(
           411,
           body: 'Token is invalid',
@@ -542,7 +542,7 @@ class Handlers {
       if (result) {
         return Response.ok(jsonEncode({'status': 'success'}));
       } else {
-        ls.logError(result);
+        print(result);
         return Response(
           404,
           body: 'Unknown error',
@@ -550,7 +550,7 @@ class Handlers {
         );
       }
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(
         410,
         body: 'Error updating data',
@@ -574,7 +574,7 @@ class Handlers {
         );
       }
       if (!await hs.tokenCheck(token, userId, productId: productId)) {
-        ls.logError('token $token ; userId $userId ; productId $productId');
+        print('token $token ; userId $userId ; productId $productId');
         return Response(
           411,
           body: 'Token is invalid',
@@ -587,7 +587,7 @@ class Handlers {
       if (result) {
         return Response.ok(jsonEncode({'status': 'success'}));
       } else {
-        ls.logError(result);
+        print(result);
         return Response(
           404,
           body: 'Unknown error',
@@ -595,7 +595,7 @@ class Handlers {
         );
       }
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(
         410,
         body: 'Error updating data',
@@ -619,7 +619,7 @@ class Handlers {
         return Response.ok(jsonEncode({...result[0]}));
       }
     } catch (e) {
-      ls.logError(e);
+      print(e);
       return Response(500, body: 'Error signing in $e');
     }
   }
@@ -665,8 +665,8 @@ class Handlers {
         }
       }
     } catch (e) {
-      ls.logError(e);
-      ls.logError(e.toString());
+      print(e);
+      print(e.toString());
       return Response(500, body: 'Error during authentication');
     }
   }
@@ -693,14 +693,14 @@ class Handlers {
     final data = jsonDecode(await request.readAsString());
     final bugText = data['bugReport'];
     if (bugText.isEmpty) {
-      ls.logError('Bug description is empty');
+      print('Bug description is empty');
       return Response(400, body: 'Bug description is required');
     }
     final result = await db.bugReport(userId: userId, description: bugText);
     if (result) {
       return Response.ok(jsonEncode({'status': 'success'}));
     } else {
-      ls.logError('Error reporting bug');
+      print('Error reporting bug');
       return Response(415, body: ' Error reporting bug');
     }
   }

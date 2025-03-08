@@ -4,16 +4,16 @@ import 'package:shelf/shelf.dart';
 import 'package:shelf_multipart/shelf_multipart.dart';
 import '../text_constants.dart';
 import '../queries.dart';
-import ' ../../../auth/gcs_service.dart';
+// import ' ../../../auth/gcs_service.dart';
 import '../img_service.dart';
 
 class HandlerService {
   final DatabaseQueries db;
-  final GoogleCloudService gcs;
+  // final GoogleCloudService gcs;
   Map<String, dynamic> data = {};
   File? file;
   List<File>? files;
-  HandlerService({required this.db, required this.gcs});
+  HandlerService({required this.db});
 
   Future<bool> getJsonAndFile(Request request,
       {bool productIdCheck = false}) async {
