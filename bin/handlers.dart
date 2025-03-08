@@ -671,14 +671,14 @@ class Handlers {
     }
   }
 
-  List<Map<String, dynamic>> _resultToListWithDateTime(Result resultData) {
-    return resultData.map((row) {
-      final resultDataMap = row.toColumnMap();
-      resultDataMap['created_at'] =
-          resultDataMap['created_at']?.toIso8601String();
-      return resultDataMap;
-    }).toList();
-  }
+  // List<Map<String, dynamic>> _resultToListWithDateTime(Result resultData) {
+  //   return resultData.map((row) {
+  //     final resultDataMap = row.toColumnMap();
+  //     resultDataMap['created_at'] =
+  //         resultDataMap['created_at']?.toIso8601String();
+  //     return resultDataMap;
+  //   }).toList();
+  // }
 
   List<Map<String, dynamic>> _resultToEnd(
     Result resultData,

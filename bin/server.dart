@@ -24,9 +24,9 @@ void main(List<String> args) async {
     try {
       conn = await Connection.open(
         Endpoint(
-            host: '104.154.93.254',
+            host: '192.168.0.130',
             port: 5432,
-            database: 'tez_bazar_db',
+            database: 'tezbazar_db',
             username: 'postgres',
             password: 'King.reload\$0'),
         settings: ConnectionSettings(
