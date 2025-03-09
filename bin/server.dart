@@ -112,7 +112,7 @@ void main(List<String> args) async {
         );
         request = request.change(context: {'logged': true});
       }
-      return Response.ok(null);
+      return Response.ok('Hello, World! 2.0\n');
     });
 
   final handler = Pipeline().addHandler(router.call);
